@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Floorstock Pull Cards</title>
+<title>Mi-Kin Creations — Pull Card Manager</title>
 <style>
 :root {
   --ink:#1a1a1a; --ink-2:#444444; --ink-3:#666666;
@@ -383,9 +383,9 @@ tr.cat-group-row td{font-size:12px;font-weight:700;color:#444;}
 <header>
   <div class="logo">
     <a href="index.html" style="text-decoration:none;color:#999;font-size:15px;margin-right:6px;transition:color .15s;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#999'" title="Back to Dashboard">←</a>
-    <div class="logo-company">Your Shop Name</div>
+    <div class="logo-company">Mi-<span>Kin</span> Creations</div>
     <div class="logo-divider"></div>
-    <div class="logo-app">Floorstock Pull Cards</div>
+    <div class="logo-app">Pull Card Manager</div>
   </div>
   <div class="header-right">
     <div id="sync-status" class="idle"><span class="sync-dot"></span><span id="sync-label">Synced</span></div>
@@ -403,7 +403,7 @@ tr.cat-group-row td{font-size:12px;font-weight:700;color:#444;}
 <!-- Password Gate -->
 <div id="passGate" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 58px);padding:2rem;">
   <div style="background:#fff;border:1px solid var(--border);border-radius:2px;padding:2.5rem;max-width:400px;width:100%;text-align:center;">
-    <h2 style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">Floorstock Pull Cards</h2>
+    <h2 style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">Pull Card Manager</h2>
     <p style="font-size:13px;color:var(--ink-3);margin-bottom:1.5rem;">Enter the password to access this tool.</p>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;">
       <input type="password" id="gatePass" placeholder="Password" onkeydown="if(event.key==='Enter')checkGatePass()" style="font-family:var(--sans);font-size:16px;padding:9px 12px;border:1px solid var(--border);border-radius:2px;text-align:center;letter-spacing:.15em;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
@@ -733,10 +733,10 @@ tr.cat-group-row td{font-size:12px;font-weight:700;color:#444;}
 <script>
 // ══ CONFIG ══ Everything customized per shop lives here and nowhere else. ══
 const CONFIG = {
-  shopNameHTML: 'Your Shop Name',      // Header brand. Wrap part in <span> for accent color, e.g. 'Acme <span>Millwork</span>'
-  homeLink: '',                        // Optional link for a back arrow in the header ('' hides it)
-  scriptUrl: 'PASTE_SCRIPT_URL_HERE',  // Apps Script web app URL, ends in /exec
-  gatePassword: 'CHANGE_ME'            // Password shown to the shop's team
+  shopNameHTML: 'Mi-Kin Creations',                 // Header brand (wrap part in <span> for accent color)
+  homeLink: 'index.html',                           // Back-arrow destination ('' hides arrow)
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbxNOB7tcKbuWP3dkT4ICNO9U3ZNAP_gFR5zE8czYbNzKX8J2GpS_5FksL48mpw-50ou/exec',
+  gatePassword: '1055'
 };
 const SCRIPT_URL = CONFIG.scriptUrl;
 
@@ -1575,12 +1575,6 @@ applyLayoutVars();
 
 // Apply CONFIG branding to the header
 document.querySelector('.logo-company').innerHTML=CONFIG.shopNameHTML;
-document.title=CONFIG.shopNameHTML.replace(/<[^>]*>/g,'')+' | Floorstock Pull Cards';
-if(!CONFIG.scriptUrl.startsWith('https://')){
-  document.querySelector('#loading p').textContent='Setup needed: open this file and paste your Apps Script URL into the CONFIG block at the top of the script section.';
-  document.querySelector('#loading .spinner').style.display='none';
-  throw new Error('CONFIG.scriptUrl not set');
-}
 const homeArrow=document.querySelector('.logo a');
 if(homeArrow){if(CONFIG.homeLink)homeArrow.href=CONFIG.homeLink;else homeArrow.style.display='none';}
 

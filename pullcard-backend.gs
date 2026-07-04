@@ -18,7 +18,7 @@ const CATS_SHEET     = 'Categories';
 const SETTINGS_SHEET = 'Settings';
 
 const CARD_HEADERS  = ['id','sku','desc','bin','supplier','qty','orderat','orderunit','notes','image','created','category','printed'];
-const ORDER_HEADERS = ['orderId','cardId','sku','desc','supplier','qtyOrdered','date','loggedAt','submittedBy','unitCost'];
+const ORDER_HEADERS = ['orderId','cardId','sku','desc','supplier','qtyOrdered','date','loggedAt','submittedBy','unitCost','po'];
 const CAT_HEADERS   = ['id','name','prefix','created'];
 
 const BACKUP_FOLDER_NAME = 'Pull Card Backups';
@@ -109,6 +109,8 @@ function doPost(e) {
     if      (data.action === 'saveCard')       { saveOneCard(data.card);                        result = ok('saved');   }
     else if (data.action === 'deleteCard')     { deleteOneCard(data.cardId);                    result = ok('deleted'); }
     else if (data.action === 'logOrder')       { logOrder(data.order);                          result = ok('logged');  }
+    else if (data.action === 'updateOrder')    { updateOrder(data.order);                       result = ok('updated'); }
+    else if (data.action === 'deleteOrder')    { deleteOrder(data.orderId);                     result = ok('deleted'); }
     else if (data.action === 'togglePrinted')  { setPrinted([data.cardId], data.printed);       result = ok('updated'); }
     else if (data.action === 'markPrinted')    { setPrinted(data.cardIds, true);                result = ok('updated'); }
     else if (data.action === 'saveCategory')   { saveOneCategory(data.category);                result = ok('saved');   }
@@ -193,8 +195,44 @@ function logOrder(order) {
   sheet.appendRow([
     order.orderId||'', order.cardId||'', order.sku||'', order.desc||'',
     order.supplier||'', order.qtyOrdered||'', order.date||'', order.loggedAt||'',
-    order.submittedBy||'', order.unitCost||''
+    order.submittedBy||'', order.unitCost||'', order.po||''
   ]);
+}
+
+// Update an existing order row by orderId. Writes only the fields present on
+// the order object, matched by header name, so custom columns are preserved.
+function updateOrder(order) {
+  const sheet = ensureSheet(SpreadsheetApp.getActiveSpreadsheet(), ORDERS_SHEET, ORDER_HEADERS);
+  const rows = sheet.getDataRange().getValues();
+  const headers = rows[0];
+  const idCol = headers.indexOf('orderId');
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][idCol]) === String(order.orderId)) {
+      const row = rows[i].slice();
+      headers.forEach(function(h, col) {
+        if (h && Object.prototype.hasOwnProperty.call(order, h)) {
+          row[col] = order[h] == null ? '' : order[h];
+        }
+      });
+      sheet.getRange(i + 1, 1, 1, row.length).setValues([row]);
+      return;
+    }
+  }
+  throw new Error('Order not found: ' + order.orderId);
+}
+
+function deleteOrder(orderId) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(ORDERS_SHEET);
+  if (!sheet) return;
+  const rows = sheet.getDataRange().getValues();
+  const idCol = rows[0].indexOf('orderId');
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][idCol]) === String(orderId)) {
+      sheet.deleteRow(i + 1);
+      return;
+    }
+  }
+  throw new Error('Order not found: ' + orderId);
 }
 
 // ═══ CATEGORIES ═════════════════════════════════════════════════════════════
