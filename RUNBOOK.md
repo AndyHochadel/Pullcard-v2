@@ -81,6 +81,13 @@ Time spent: ______
 
 ## Phase 5 - Data import
 
+**Fresh install vs migration:** the steps below are for a NEW customer with an
+inventory spreadsheet. If moving an EXISTING Floorstock/Pull Card instance to a
+new Google account, do not use CSV, it drops notes and images. Instead open the
+old Sheet, right-click each tab (Cards, Orders, Categories, Settings) > Copy to
+> the new spreadsheet, then rename the copied tabs to exact names. This carries
+everything including images, history, and category ids, so no remapping needed.
+
 1. [ ] In the app, create their categories first (Categories tab) so prefixes exist.
 2. [ ] Massage their inventory list into the Cards sheet columns:
    `id, sku, desc, bin, supplier, qty, orderat, orderunit, notes, image, created, category, printed`
@@ -89,9 +96,11 @@ Time spent: ______
    - `image`, `printed`: leave blank; `created`: leave blank or a timestamp
 3. [ ] Paste the rows directly into the Cards sheet below the header.
 4. [ ] Refresh the app and verify counts, spot-check five cards, confirm category grouping.
+   Known gotchas from rehearsal: a category in the data that was never created in
+   the app, and category name spelling drift between the data and the app.
 5. [ ] Photos are added per card through the app afterward, by the customer or as a paid add-on.
 
-Time spent: ______
+Time spent: ______   (Benchmark: 103 cards, 15 categories, unhurried = ~1.5 hrs, Jul 2026)
 
 ## Phase 6 - Smoke test (do every item)
 
